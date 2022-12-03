@@ -1,0 +1,239 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  This project uses an online form which collects details from a front-end form. The details are then sent to a database where they are converted and stored in 
+  tabular format. The owner is also notified of the subscribers. All subscribers receive a daily quote to their email through scheduled events by EventBridge where
+  lambda functions fetch quotes stored in a s3 bucket. The email is then sent to a Send Grid third party mailer that helps distribute the emails to all the subscribers.
+
+
+Globals:
+  Function:
+    Timeout: 20
+    Environment:
+      Variables:
+        USERS_TABLE: !Ref UsersTable
+        QUOTE_BUCKET: !Ref S3QuotesBucket
+        QUOTES_TOPIC: !Ref QuoteMessageTopic
+        SENDGRID_API_KEY: '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'
+
+
+Resources:
+
+  S3QuotesBucket:  #Bucket where the quotes file is loaded in json format
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}
+  
+  QuoteMessageTopic:  #Owner receives subscriber info here
+    Type: AWS::SNS::Topic
+
+  QuotesMessageSubscription: #subscription to the topic by the owner
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref QuoteMessageTopic
+      Protocol: email
+      Endpoint: ShaivaMuthaiya@gmail.com
+      DeliveryPolicy:
+        healthyRetryPolicy:
+          numRetries: 20
+          minDelayTarget: 30
+          maxDelayTarget: 600
+          backoffFunction: exponential
+
+  UsersTable:  #database storing all the details of the subscribers
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions: 
+        - AttributeName: userid
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userid
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  QuoteFetchFunction:  #fetches random quote from the s3 bucket file
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: lambda/
+      Handler: functions.get_quote
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+      Layers:
+        - !Ref SendGridLayer
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        GetQuotes:
+          Type: Api
+          Properties:
+            Path: /quotes
+            Method: GET
+
+  GetSubsFunction:  #gets list of subscriber emails from the dynamodb database
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: lambda/
+      Handler: functions.getSubscribers
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+
+      Layers:
+        - !Ref SendGridLayer #layer created to satisy dependancies since sendgrid module is not available by default
+      Events:
+        GetQuotes:
+          Type: Api
+          Properties:
+            Path: /getSubscribers
+            Method: GET
+
+  SaveDetailsFunction:  #saves details from the submitted form and saves it to dynamodb
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: lambda/
+      Handler: functions.save_user_details
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Layers:
+        - !Ref SendGridLayer #layer created to satisy dependancies since sendgrid module is not available by default
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        SaveDetails:
+          Type: Api
+          Properties:
+            Path: /subscribe
+            Method: POST
+
+
+  SendEmailsFunction:  #Sends an email to sendgrid which distributes it to all the subscribers
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: lambda/
+      Handler: functions.sendEmail
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Layers:
+        - !Ref SendGridLayer #layer created to satisy dependancies since sendgrid module is not available by default
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        SendEmail:
+          Type: Api
+          Properties:
+            Path: /sendEmail
+            Method: POST
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 13 * * ? *)
+
+
+  StaticMailerFunction:   #creates a static mail that is used later on for the final email
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: lambda/
+      Handler: functions.staticMailer
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt QuoteMessageTopic.TopicName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable           
+        - S3CrudPolicy:
+            BucketName: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}
+      Layers:
+        - !Ref SendGridLayer #layer created to satisy dependancies since sendgrid module is not available by default
+      Events:
+        Mailer:
+          Type: Api
+          Properties:
+            Path: /static-mailer
+            Method: POST
+
+#Several permissions allowing api gateway to access each lambda function
+
+
+  APIGatewayInvokeLambdaPermission:  #Permission allowing API Gateway to invoke lambda
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt QuoteFetchFunction.Arn
+        SourceAccount: !Sub ${AWS::AccountId}
+        Principal: apigateway.amazonaws.com
+  
+
+  APIGatewayInvokeLambdaPermission2:  #Permission allowing API Gateway to invoke lambda
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt SaveDetailsFunction.Arn
+        SourceAccount: !Sub ${AWS::AccountId}
+        Principal: apigateway.amazonaws.com
+
+
+  APIGatewayInvokeLambdaPermission3:  #Permission allowing API Gateway to invoke lambda
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt StaticMailerFunction.Arn
+        SourceAccount: !Sub ${AWS::AccountId}
+        Principal: apigateway.amazonaws.com
+
+  APIGatewayInvokeLambdaPermission4:  #Permission allowing API Gateway to invoke lambda
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt GetSubsFunction.Arn
+        SourceAccount: !Sub ${AWS::AccountId}
+        Principal: apigateway.amazonaws.com
+
+  APIGatewayInvokeLambdaPermission5:  #Permission allowing API Gateway to invoke lambda
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt SendEmailsFunction.Arn
+        SourceAccount: !Sub ${AWS::AccountId}
+        Principal: apigateway.amazonaws.com
+
+  EventBridgeLambdaPermission5:  #Permission allowing Events to invoke lambda
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt SendEmailsFunction.Arn
+        SourceAccount: !Sub ${AWS::AccountId}
+        Principal: events.amazonaws.com
+
+
+  SendGridLayer:
+      Type: AWS::Serverless::LayerVersion  #Layer to help lambda run the module "sendgrid"
+      Properties:
+          LayerName: send-grid-dependencies
+          Description: Dependencies for app
+          ContentUri: lambda/
+          CompatibleRuntimes:
+            - python3.9
+          LicenseInfo: 'Shaiva'
+          RetentionPolicy: Retain
