@@ -187,7 +187,7 @@ def buildEmailBody(id, form):
 def sendGridEmail(subscribers, content):
 
     message = Mail(    #the final email that is composed for sending
-    from_email='ShaivaMuthaiya@gmail.com',
+    from_email='<your email id which you used for sendgrid verification',
     to_emails= subscribers,
     subject='Quotes to brighten up your day',
     html_content= content )
