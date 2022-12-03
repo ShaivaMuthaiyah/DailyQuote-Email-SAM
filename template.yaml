@@ -14,7 +14,7 @@ Globals:
         USERS_TABLE: !Ref UsersTable
         QUOTE_BUCKET: !Ref S3QuotesBucket
         QUOTES_TOPIC: !Ref QuoteMessageTopic
-        SENDGRID_API_KEY: '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'
+        SENDGRID_API_KEY: '< Your SendGrid API Key here'
 
 
 Resources:
@@ -32,7 +32,7 @@ Resources:
     Properties:
       TopicArn: !Ref QuoteMessageTopic
       Protocol: email
-      Endpoint: ShaivaMuthaiya@gmail.com
+      Endpoint: < your email endpoint here wherever you want your SNS to send emails to >
       DeliveryPolicy:
         healthyRetryPolicy:
           numRetries: 20
