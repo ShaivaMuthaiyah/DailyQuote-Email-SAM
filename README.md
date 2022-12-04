@@ -21,8 +21,8 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 Two key things required for this project are :
 
-* AWS CLI (set it up easily with this guide at https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
-* Send Grid verified email (you can sign up for free at https://sendgrid.com/)
+* AWS CLI (set it up easily with this guide at https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html
+* Send Grid verified email (you can sign up for free at https://sendgrid.com/
 
 <!-- GETTING STARTED -->
 ### Getting Started
@@ -34,4 +34,4 @@ After setting up the AWS CLI you can use this command inside whichever directory
   sam init
   ```
 
-Set it up with the language you want to work with and choose the 'Hello World' example project as a base. You can follow this guide here (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started-hello-world.html)
+Set it up with the language you want to work with and choose the 'Hello World' example project as a base. You can follow this guide here at  https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started-hello-world.html
