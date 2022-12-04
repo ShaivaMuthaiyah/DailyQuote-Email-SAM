@@ -11,7 +11,7 @@ Important:
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-* Python
+* Python 3.9
 * AWS Lambda, SNS, API Gateway, EventBridge, DynamoDB, S3 and SAM
 * YAML
 * Python Flask
@@ -39,7 +39,7 @@ Set it up with the language you want to work with and choose the 'Hello World' e
 
 ## Project Components
 
-There are three key folders to this project. The main project directory, lambdas and front-end. The main project directory has the configuration and SAM template to deploy the architecture. The /lambdas folder has the lambda functions and necessary dependancies and the /front-end has the files related to front and and python-flask environment.
+There are three key folders to this project. The main project directory, lambda and front-end. The main project directory has the configuration and SAM template to deploy the architecture. The /lambda folder has the lambda functions and necessary dependancies and the /front-end has the files related to front and and python-flask environment.
 
 
 ###Main Project Directory
@@ -54,3 +54,7 @@ You can create your template in this folder as well as where the configuration f
   ```sh
   sam deploy
   ```
+  
+  ###Lambda
+
+Over here i have added the python file containing all the lambda functions required to run the application. Please verify your email with the send grid service since the functions require the sendgrid API key to send emails. The sendgrid modules are not available in lambda so you will have to package it into the functions.py in the folder. Here is a guide on how to do that at https://docs.aws.amazon.com/lambda/latest/dg/python-package.html. You can use the /lambda directory and package it into the functions.py 
