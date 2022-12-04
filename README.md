@@ -35,3 +35,22 @@ After setting up the AWS CLI you can use this command inside whichever directory
   ```
 
 Set it up with the language you want to work with and choose the 'Hello World' example project as a base. You can follow this guide here at  https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started-hello-world.html
+
+
+## Project Components
+
+There are three key folders to this project. The main project directory, lambdas and front-end. The main project directory has the configuration and SAM template to deploy the architecture. The /lambdas folder has the lambda functions and necessary dependancies and the /front-end has the files related to front and and python-flask environment.
+
+
+###Main Project Directory
+
+You can create your template in this folder as well as where the configuration file with automaticallly appear. The quotes.json folder is also provided here, this has to be put into the s3 bucket once the intial architecture is launched. 
+
+* Build the project
+  ```sh
+  sam build
+  ```
+ * Deploy the architecture
+  ```sh
+  sam deploy
+  ```
