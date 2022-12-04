@@ -10,9 +10,21 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Prerequisites
+
+Two key things required for this project are :
+
+* AWS CLI 
+* Send Grid verified email ( you can sign up for free at https://sendgrid.com/ )
+
 <!-- GETTING STARTED -->
 ### Getting Started
 
-For this to work you must have your aws account and SAM set up using the AWS CLI and intialising a hello world project from the sam init command.
+After setting up the AWS CLI you can use this command inside whicever directory you want to start the project
+
+* sam init
+  ```sh
+  npm install npm@latest -g
+  ```
 
 
