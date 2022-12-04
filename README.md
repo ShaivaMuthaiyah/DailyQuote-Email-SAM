@@ -18,6 +18,7 @@
     <ul>
         <li><a href="#main-project-directory">Main Project Directory</a></li>
       <li><a href="#lambda">Lambda</a></li>
+      <li><a href="#front-end">Front-End</a></li>
       </ul>
  
   </ol>
