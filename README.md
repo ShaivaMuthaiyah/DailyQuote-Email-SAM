@@ -91,5 +91,5 @@ Over here i have added the python file containing all the lambda functions requi
 
   ### Front-End
 
-This folder contains the files for the subscription form that is hosted on a flask server. The flask app is app.py and automatically registers html files in the folder /template and css files in /static. 
+This folder contains the files for the subscription form that is hosted on a flask server. The flask app is app.py and automatically registers html files in the folder /template and css files in /static. To host the application, need to set up a flask server as well as the environment to run it in. The codes provided can be used directly as all key componenets have been configured. Here is a helpful guide on flask servers at https://www.digitalocean.com/community/tutorials/how-to-create-your-first-web-application-using-flask-and-python-3.
 
