@@ -14,12 +14,11 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#project-folders">Project Folders</a></li>
+    <ul>
+        <li><a href="#main-project-directory">Main Project Directory</a></li>
+      </ul>
+ 
   </ol>
 </details>
 
@@ -70,7 +69,7 @@ Set it up with the language you want to work with and choose the 'Hello World' e
 There are three key folders to this project. The main project directory, lambda and front-end. The main project directory has the configuration and SAM template to deploy the architecture. The /lambda folder has the lambda functions and necessary dependancies and the /front-end has the files related to front and and python-flask environment.
 
 
-###Main Project Directory
+### Main Project Directory
 
 You can create your template in this folder as well as where the configuration file with automaticallly appear. The quotes.json folder is also provided here, this has to be put into the s3 bucket once the intial architecture is launched. Lauch the AWS CLI and from the project directory you can use these commands after the intial setup using the same deploy --guided command from the guide.
 
