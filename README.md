@@ -8,9 +8,6 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * Python Flask
 * HTML & CSS with AJAX 
 
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Prerequisites
 
 Two key things required for this project are :
@@ -28,4 +25,4 @@ After setting up the AWS CLI you can use this command inside whicever directory 
   sam init
   ```
 
-Set it up with the language you want to work with and choose the 'Hello World' example project as a base.
+Set it up with the language you want to work with and choose the 'Hello World' example project as a base. You can follow this guide here (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started-hello-world.html)
