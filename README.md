@@ -37,7 +37,7 @@ After setting up the AWS CLI you can use this command inside whichever directory
 Set it up with the language you want to work with and choose the 'Hello World' example project as a base. You can follow this guide here at  https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started-hello-world.html
 
 
-## Project Components
+## Project Folders
 
 There are three key folders to this project. The main project directory, lambda and front-end. The main project directory has the configuration and SAM template to deploy the architecture. The /lambda folder has the lambda functions and necessary dependancies and the /front-end has the files related to front and and python-flask environment.
 
@@ -57,4 +57,5 @@ You can create your template in this folder as well as where the configuration f
   
   ###Lambda
 
-Over here i have added the python file containing all the lambda functions required to run the application. Please verify your email with the send grid service since the functions require the sendgrid API key to send emails. The sendgrid modules are not available in lambda so you will have to package it into the functions.py in the folder. Here is a guide on how to do that at https://docs.aws.amazon.com/lambda/latest/dg/python-package.html. You can use the /lambda directory and package it into the functions.py 
+Over here i have added the python file containing all the lambda functions required to run the application. Please verify your email with the send grid service since the functions require the sendgrid API key to send emails. The sendgrid modules are not available in lambda so you will have to package it into the functions.py in the folder. Here is a guide on how to do that at https://docs.aws.amazon.com/lambda/latest/dg/python-package.html. You can use the /lambda directory and package it into the functions.py inside the same directory.
+
