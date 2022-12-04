@@ -83,7 +83,12 @@ You can create your template in this folder as well as where the configuration f
   sam deploy
   ```
   
-  ###Lambda
+  ### Lambda
 
 Over here i have added the python file containing all the lambda functions required to run the application. Please verify your email with the send grid service since the functions require the sendgrid API key to send emails. The sendgrid modules are not available in lambda so you will have to package it into the functions.py in the folder. Here is a guide on how to do that at https://docs.aws.amazon.com/lambda/latest/dg/python-package.html. You can use the /lambda directory and package it into the functions.py inside the same directory.
+
+
+  ### Front-End
+
+This folder contains the files for the subscription form that is hosted on a flask server. The flask app is app.py and automatically registers html files in the folder /template and css files in /static. 
 
