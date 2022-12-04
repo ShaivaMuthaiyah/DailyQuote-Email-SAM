@@ -17,6 +17,7 @@
     <li><a href="#project-folders">Project Folders</a></li>
     <ul>
         <li><a href="#main-project-directory">Main Project Directory</a></li>
+      <li><a href="#lambda">Lambda</a></li>
       </ul>
  
   </ol>
