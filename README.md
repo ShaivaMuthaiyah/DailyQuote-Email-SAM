@@ -37,10 +37,9 @@ This is a serverless application that sends automated emails to its subscribers 
 Important:
 * This project was done for us-west-2 (Oregon)
 * Most of the items can be copied directly but some configuration has to be done
+* For using sendgrid you are required to register with them for the API Key.
 
 ### Built With
-
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 * Python 3.9
 * AWS Lambda, SNS, API Gateway, EventBridge, DynamoDB, S3 and SAM
